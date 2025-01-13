@@ -249,8 +249,6 @@ app.post("/login", async function(req, res) {
 app.post("/purchase", async function(req, res) {
   const username = req.body.username;
   const product_id = req.body.product_id;
-  const cost = req.body.cost;
-
   if (!username) {
    res.status(400).json({ error: "Username is required" });
   } else {
@@ -265,6 +263,10 @@ app.post("/purchase", async function(req, res) {
       }
       const updateStockQuery = "UPDATE Products SET stock = stock - 1 WHERE product_id = ?";
       await db.run(updateStockQuery, [product_id]);
+      //lets get price of the item
+      const priceQuery = "SELECT price FROM Products WHERE product_id = ?";
+      const priceResult = await db.get(priceQuery, [product_id]);
+      const cost = priceResult.price;
       // Create a new order
       const confirmationCode = generateConfirmationCode();
       const insertOrderQuery = "INSERT INTO Orders (order_id, product_id, username, total_amount) VALUES (?, ?, ?, ?)";

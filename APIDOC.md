@@ -192,7 +192,6 @@ password=userpass123
 {
     "username": "buyer",
     "product_id": "123",
-    "cost": 49.99
 }
 ```
 

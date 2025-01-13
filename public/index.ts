@@ -247,7 +247,7 @@
    */
   async function handlePaymentSubmission() : Promise<void> {
     try {
-      await handlePurchase(currentProductId, currentProductPrice);
+      await handlePurchase(currentProductId);
       id('payment-section').classList.add('hidden');
       hideTransactions();
       clearPaymentForm();
@@ -587,7 +587,6 @@ function handleSearch(event: Event): void {
         showError('product', 'Please login to make a purchase', false);
       } else {
         currentProductId = productId;
-        currentProductPrice = price;
         id('product-area').classList.add('hidden');
         id('all-products').classList.add('hidden');
         id('main-item-section').classList.add('hidden');
@@ -659,13 +658,18 @@ function handleSearch(event: Event): void {
     return submitReview;
   }
 
+  type purchaseFields = {
+    message: string,
+    confirmationCode: string
+  };
+
   /**
    * Handles the purchase of a product.
    * @param {number} productId - The product ID.
    * @param {number} price - The product price.
    * @throws {Error} - Throws an error if the purchase fails.
    */
-  async function handlePurchase(productId : number, price : number) : Promise<void> { {
+  async function handlePurchase(productId : number) : Promise<void> { {
     try {
       const form  = new FormData();
       if (user) {
@@ -674,7 +678,6 @@ function handleSearch(event: Event): void {
         throw new Error("User is not logged in");
       }
       form.append("product_id", String(productId));
-      form.append("cost", String(price));
 
       const response : Response = await fetch("/purchase", {
         method: "POST",
@@ -685,7 +688,7 @@ function handleSearch(event: Event): void {
         throw new Error("Purchase failed");
       }
 
-      const data = await response.json();
+      const data : purchaseFields = await response.json();
 
       displaySuccessMessage(`Purchase successful! Order number: ${data.confirmationCode}`);
 
@@ -694,7 +697,6 @@ function handleSearch(event: Event): void {
       id('account-section').classList.add('hidden');
 
     } catch (err) {
-      console.error(err);
       showError('product', 'Purchase failed. Please try again.', false);
       throw err;
     }
