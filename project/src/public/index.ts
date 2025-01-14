@@ -7,6 +7,7 @@ import { logout, savedUserEvent, login, createNewUser, createUser } from './user
 import { getTransactions } from './products/previousTransactions/index.js';
 import { displayAllProducts, hideTransactions } from './products/displays/index.js';
 import { displayAllWithSearchTerms } from './products/search/index.js';
+import { paymentStuff } from './products/payment/index.js';
 
 "use strict";
 (function() {
@@ -16,7 +17,7 @@ import { displayAllWithSearchTerms } from './products/search/index.js';
   /**
    * Initializes the application by setting up event listeners and displaying products.
    */
-  function init() : void {
+  function init(): void {
     //break up methods to make init smaller
     savedUserEvent();
     displayAllProducts();
@@ -32,45 +33,45 @@ import { displayAllWithSearchTerms } from './products/search/index.js';
     /**
    * Sets up event listeners for password-related elements.
    */
-  function passwordEvents() : void {
+  function passwordEvents(): void {
     id('create-password-input-form').addEventListener('input', function(event: Event) {
-      let target : HTMLInputElement = event.target as HTMLInputElement;
-      let password = target.value;
+      let target: HTMLInputElement = event.target as HTMLInputElement;
+      let password: string = target.value;
       checkIfStrong(password);
     });
 
     id('create-user-btn').addEventListener('click', function() {
-      let password = id('create-password-input-form').value;
-      let strength = checkIfStrong(password);
+      let password: string = (id('create-password-input-form') as HTMLInputElement).value;
+      let strength: boolean = checkIfStrong(password);
       if (strength) {
-        let isVerified = verifyPassword();
+        let isVerified: boolean = verifyPassword();
         if (isVerified) {
           createNewUser();
         }
       }
     });
 
-    const togglePassword = id('toggle-password');
-    const passwordInput = id('create-password-input-form');
+    const togglePassword: HTMLElement = id('toggle-password');
+    const passwordInput: HTMLElement = id('create-password-input-form');
     togglePassword.addEventListener('click', function() {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      const type: string = passwordInput.getAttribute('type') === 'password' ? 'text': 'password';
       passwordInput.setAttribute('type', type);
-      this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+      this.textContent = type === 'password' ? '👁️': '👁️‍🗨️';
     });
   }
 
     /**
    * Sets up event listeners for login-related elements.
    */
-    function loginEvents() {
+    function loginEvents(): void {
       id('login-btn').addEventListener('click', handleLogin);
       id('logout-btn').addEventListener('click', logout);
     }
 
-  function shopAllEvent() : void {
-    let shopAll : HTMLElement = id('shop-all');
+  function shopAllEvent(): void {
+    let shopAll: HTMLElement = id('shop-all');
     if (shopAll) {
-      shopAll.addEventListener('click', function(event) {
+      shopAll.addEventListener('click', function(event: Event) {
         event.preventDefault();
         hideTransactions();
         displayAllProducts();
@@ -78,8 +79,8 @@ import { displayAllWithSearchTerms } from './products/search/index.js';
     }
   }
 
-  function previousTransactionEvent() : void {
-    let previousTransactions : HTMLElement | null = id('previous-transactions');
+  function previousTransactionEvent(): void {
+    let previousTransactions: HTMLElement | null = id('previous-transactions');
     if (previousTransactions) {
       previousTransactions.addEventListener('click', function(event: MouseEvent) {
         event.preventDefault();
@@ -88,8 +89,8 @@ import { displayAllWithSearchTerms } from './products/search/index.js';
     }
   }
 
-  function searchBarEvent() : void {
-    let searchButton : HTMLElement = id('search-button');
+  function searchBarEvent(): void {
+    let searchButton: HTMLElement = id('search-button');
     if (searchButton) {
       searchButton.addEventListener('click', function(event: Event) {
         handleSearch(event);
@@ -104,13 +105,13 @@ import { displayAllWithSearchTerms } from './products/search/index.js';
 function handleSearch(event: Event): void {
   event.preventDefault();
   // Safely cast elements using optional chaining
-  const search : HTMLInputElement | null = qs('#search-bar .search-input') as HTMLInputElement | null;
-  const price : HTMLInputElement | null= id('max-price') as HTMLInputElement | null;
-  const category : HTMLSelectElement | null = id('category') as HTMLSelectElement | null;
+  const search: HTMLInputElement | null = qs('#search-bar .search-input') as HTMLInputElement | null;
+  const price: HTMLInputElement | null= id('max-price') as HTMLInputElement | null;
+  const category: HTMLSelectElement | null = id('category') as HTMLSelectElement | null;
   // Safely access values with optional chaining and trim them
-  const searchInput = search?.value.trim() || null;
-  const maxPrice = price?.value.trim() || null;
-  const categoryValue = category?.value || null;
+  const searchInput: string | null = search?.value.trim() || null;
+  const maxPrice: string | null = price?.value.trim() || null;
+  const categoryValue: string | null = category?.value || null;
 
   // Check if any input is provided
   if (searchInput || maxPrice || categoryValue) {
@@ -119,14 +120,11 @@ function handleSearch(event: Event): void {
   }
 }
 
-  function createAccountEvent() : void {
-    let createAccountBtn : HTMLElement = id('create-account-btn');
+  function createAccountEvent(): void {
+    let createAccountBtn: HTMLElement = id('create-account-btn');
     if(createAccountBtn) {
       createAccountBtn.addEventListener('click', handleCreateAccountClick);
     }
   }
-})();
-function paymentStuff() {
-  throw new Error('Function not implemented.');
-}
 
+})();

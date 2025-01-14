@@ -1,11 +1,11 @@
 import { id } from '../../extraFunctions/redudant/index.js';
 import { clearError , showError } from '../../extraFunctions/events.js';
-import { user } from '../userLogStuff/user.js';
+import { login, user } from '../userLogStuff/user.js';
 
 /**
    * Shows the logged-in state and displays the appropriate elements.
    */
-export function showLoggedIn() {
+export function showLoggedIn(): void {
   id('logout-btn').classList.remove('hidden');
   id('login-btn').classList.add('hidden');
   id('create-account-btn').classList.add('hidden');
@@ -16,36 +16,43 @@ export function showLoggedIn() {
   id('previous-transactions').classList.remove('hidden');
 }
 
-/**
+  /**
    * Handles the login process.
    */
-export function handleLogin() {
-  handleLoginClick();
-  id('submit-login-btn').addEventListener('click', async function() {
-    let logged = await login();
-    if (logged) {
-      if (user) {
-        localStorage.setItem('username', user);
+  export function handleLogin(): void {
+    handleLoginClick();
+    id('submit-login-btn').addEventListener('click', async function() {
+      let logged: boolean = await login();
+      if (logged) {
+        if (user) {
+          localStorage.setItem('username', user);
+        } else {
+          logInFailed();
+        }
+        showLoggedIn();
       } else {
         logInFailed();
       }
-      showLoggedIn();
-    } else {
-      logInFailed();
-    }
-  });
-}
+    });
+  }
 
  /**
    * Handles the login click event.
    */
- function handleLoginClick() {
-  if (id('username')) id('username').value = '';
-  if (id('email')) id('email').value = '';
-  if (id('create-password-input-form')) id('create-password-input-form').value = '';
-  if (id('verify-password-input')) id('verify-password-input').value = '';
+ function handleLoginClick(): void {
+  if (id('username')) {
+    (id('username') as HTMLInputElement).value = '';
+  }
+  if (id('email')) {
+    (id('email') as HTMLInputElement).value = '';
+  }
+  if (id('create-password-input-form')) {
+    (id('create-password-input-form') as HTMLInputElement).value = '';
+  }
+  if (id('verify-password-input')) {
+    (id('verify-password-input') as HTMLInputElement).value = '';
+  }
   clearError('create-account');
-
   id('product-area').classList.add('hidden');
   id('all-products').classList.add('hidden');
   id('main-item-section').classList.add('hidden');
@@ -56,13 +63,13 @@ export function handleLogin() {
   /**
    * Displays an error message for a failed login attempt.
    */
-  function logInFailed() {
+  function logInFailed(): void {
     showError('login', 'Invalid username or password', false);
   }
 
-  export function handleCreateAccountClick() {
-    let loginUsername : HTMLInputElement = (id('login-username') as HTMLInputElement)
-    let loginPassword : HTMLInputElement = (id('login-password') as HTMLInputElement)
+  export function handleCreateAccountClick(): void {
+    let loginUsername: HTMLInputElement = (id('login-username') as HTMLInputElement)
+    let loginPassword: HTMLInputElement = (id('login-password') as HTMLInputElement)
     if (loginUsername) {
       loginUsername.value = '';
     }

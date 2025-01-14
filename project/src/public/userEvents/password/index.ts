@@ -1,14 +1,14 @@
 import { id } from '../extraFunctions/extra.js';
 import { showError, clearError } from '../extraFunctions/events.js';
 
-const minPasswordLength : number = 8;
+const minPasswordLength: number = 8;
 
   /**
    * Checks if a password is strong and displays appropriate error messages.
    * @param {string} password - The password to check.
    * @returns {boolean} - Returns true if the password is strong, false otherwise.
    */
-  export function checkIfStrong(password : string) : boolean {
+  export function checkIfStrong(password: string): boolean {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /\d/.test(password);
@@ -37,9 +37,9 @@ const minPasswordLength : number = 8;
    * Verifies that the password matches the confirm password input.
    * @returns {boolean} - Returns true if the passwords match, false otherwise.
    */
-  export function verifyPassword() : boolean{
-    const verify = id('verify-password-input').value;
-    const password = id('create-password-input-form').value;
+  export function verifyPassword(): boolean{
+    const verify: string = id('verify-password-input').value;
+    const password: string = id('create-password-input-form').value;
     if (verify !== password) {
       showError('create-account', 'Passwords do not match', false);
     }

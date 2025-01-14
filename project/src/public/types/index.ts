@@ -35,3 +35,12 @@ export type Order = {
   image: string,
   product_id: number
 }
+
+export type logIn = {
+    message: string,
+    valid: boolean
+}
+
+export type newUser = {
+  message: string
+}

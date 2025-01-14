@@ -2,11 +2,12 @@ import { id } from '../../extraFunctions/redudant/index.js';
 import { clearError, showError } from '../../extraFunctions/events.js';
 import { showLoggedIn } from '../login/index.js';
 import { checkIfStrong } from './passwordEvents.js';
+import { logIn, newUser } from '../../types/index.js';
 
 export let user: string | null = null;
 
-export function savedUserEvent() : void {
-  const savedUser : string | null = localStorage.getItem('username');
+export function savedUserEvent(): void {
+  const savedUser: string | null = localStorage.getItem('username');
   //if the user saved then we log them in already
   if (savedUser) {
     user = savedUser;
@@ -18,10 +19,10 @@ export function savedUserEvent() : void {
    * Logs in the user with the provided credentials.
    * @returns {Promise<boolean>} - Returns a promise that resolves to true if the login was successful, false otherwise.
    */
-  export async function login() {
+  export async function login(): Promise<boolean> {
     clearError('login');
-    let username = (id('login-username') as HTMLFormElement).value;
-    let password = (id('login-password') as HTMLFormElement).value;
+    let username: string = (id('login-username') as HTMLFormElement).value;
+    let password: string = (id('login-password') as HTMLFormElement).value;
 
     if (!username || !password) {
       showError('login', 'Please enter both username and password', false);
@@ -32,7 +33,7 @@ export function savedUserEvent() : void {
       const dataForm = new FormData();
       dataForm.append("username", username);
       dataForm.append("password", password);
-      const response = await fetch("/login", {
+      const response: Response = await fetch("/login", {
         method: "POST",
         body: dataForm,
       });
@@ -40,7 +41,7 @@ export function savedUserEvent() : void {
         showError('login', 'Login failed', false);
         return false;
       }
-      const data = await response.json();
+      const data: logIn = await response.json();
       if (data.valid) {
         user = username;
         if (user) {
@@ -60,7 +61,7 @@ export function savedUserEvent() : void {
   /**
    * Logs out the user and updates the UI accordingly.
    */
-  export function logout() {
+  export function logout(): void {
     if (user !== null) {
       user = null;
       localStorage.removeItem('username');
@@ -74,12 +75,12 @@ export function savedUserEvent() : void {
    /**
    * Creates a new user account if the password is strong enough and matches the confirmation.
    */
-   export async function createNewUser() {
+   export async function createNewUser(): Promise<void> {
     clearError('create-account');
-    let password = (id('create-password-input-form') as HTMLFormElement).value;
-    let strength = checkIfStrong(password);
+    let password: string = (id('create-password-input-form') as HTMLFormElement).value;
+    let strength: boolean = checkIfStrong(password);
     if (strength) {
-      let success = await createUser();
+      let success: boolean | undefined = await createUser();
       if (success) {
         showLoggedIn();
       }
@@ -90,15 +91,15 @@ export function savedUserEvent() : void {
    * Creates a new user account.
    * @returns {Promise<boolean>} - Returns a promise that resolves to true if the user was created successfully, false otherwise.
    */
-    export async function createUser() {
+    export async function createUser(): Promise<boolean> {
       try {
-        let username = (id('username') as HTMLFormElement).value;
-        let password = (id('create-password-input-form') as HTMLFormElement).value;
-        let email = (id('email') as HTMLFormElement).value;
+        let username: string = (id('username') as HTMLFormElement).value;
+        let password: string = (id('create-password-input-form') as HTMLFormElement).value;
+        let email: string = (id('email') as HTMLFormElement).value;
 
         if (!username || !password || !email) {
           showError('create-account', 'All fields are required', false);
-          return;
+          return false;
         }
 
         const formData = new FormData();
@@ -106,12 +107,12 @@ export function savedUserEvent() : void {
         formData.append("password", password);
         formData.append("email", email);
 
-        let response = await fetch('/newUser', {
+        let response: Response = await fetch('/newUser', {
           method: "POST",
           body: formData
         });
 
-        let data = await response.json();
+        let data: newUser = await response.json();
         if (data.message === "User created") {
           user = username;
           if (user) {
@@ -120,8 +121,10 @@ export function savedUserEvent() : void {
           return true;
         } else {
           showError('create-account', 'Username or email already exists', false);
+          return false;
         }
       } catch (err) {
         showError('create-account', 'Failed to create account. Please try again.', false);
+        return false;
       }
     }
