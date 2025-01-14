@@ -1,4 +1,4 @@
-import { id, gen, qs } from '../extraFunctions/extra.js';
+import { id, gen } from '../extraFunctions/extra.js';
 import { Product } from '../types/index.js';
 import { showError } from '../extraFunctions/events.js';
 import { clearError } from '../extraFunctions/events.js';
@@ -11,14 +11,14 @@ export let currentProductId : number | null = null;
   /**
    * Displays a message indicating no previous orders.
    */
-  function displayNoOrders() {
-    const transactionContent = id('transaction-content');
+  export function displayNoOrders() : void {
+    const transactionContent : HTMLElement = id('transaction-content');
     transactionContent.innerHTML = '';
 
-    const heading = createPurchaseHeading();
+    const heading : HTMLElement = createPurchaseHeading();
     transactionContent.appendChild(heading);
 
-    const noOrdersDiv = gen('div');
+    const noOrdersDiv : HTMLElement = gen('div');
     noOrdersDiv.textContent = 'No previous orders found.';
     noOrdersDiv.classList.add('no-products-message');
     transactionContent.appendChild(noOrdersDiv);
@@ -27,22 +27,22 @@ export let currentProductId : number | null = null;
     id('transaction-area').classList.remove('hidden');
   }
 
-       /**
+    /**
    * Shows the details of a specific product.
    * @param {string} productName - The name of the product to display.
    */
-       export async function showProduct(productName : string): Promise<void> {
-        try {
-          const response : Response= await fetch('/getProducts?name=' + productName);
-          if (!response.ok) {
-            throw new Error("Could not find product");
-          }
-          const data : Product[] = await response.json();
-          displayProduct(data);
-        } catch(err) {
-          showError('product', 'Failed to load product details.', false);
-        }
+    export async function showProduct(productName : string): Promise<void> {
+    try {
+      const response : Response= await fetch('/getProducts?name=' + productName);
+      if (!response.ok) {
+        throw new Error("Could not find product");
       }
+      const data : Product[] = await response.json();
+      displayProduct(data);
+    } catch(err) {
+      showError('product', 'Failed to load product details.', false);
+    }
+  }
 
         /**
    * Displays a single product's details.
@@ -51,7 +51,7 @@ export let currentProductId : number | null = null;
     export function displayProduct(item : Product[]) : void {
       const data : Product = item[0];
       setupProductDisplay();
-      const singleProductContainer = createProductContainer(data);
+      const singleProductContainer : HTMLElement = createProductContainer(data);
       id("product-area").appendChild(singleProductContainer);
     }
 
@@ -71,37 +71,37 @@ export let currentProductId : number | null = null;
    * @param {number} price - The product price.
    * @param {number} averageReviews - The average review rating.
    */
-      export function renderProduct(productName : string, price: number, averageReviews: number) : void {
-        const productArea : HTMLElement = id('product-area');
-        const productCard : HTMLElement= gen('div');
-        productCard.className = 'product-card';
+    export function renderProduct(productName : string, price: number, averageReviews: number) : void {
+      const productArea : HTMLElement = id('product-area');
+      const productCard : HTMLElement= gen('div');
+      productCard.className = 'product-card';
 
-        let image : HTMLElement= createImage(productName);
-        let nameDiv : HTMLElement = createNameDiv(productName);
-        let starsDiv : HTMLElement = createStarDiv(averageReviews);
-        let priceDiv : HTMLElement = createPriceDiv(price);
-        productCard.addEventListener('click', function() {
-          showProduct(productName);
-        });
-        productCard.appendChild(image);
-        productCard.appendChild(nameDiv);
-        productCard.appendChild(starsDiv);
-        productCard.appendChild(priceDiv);
-        productArea.appendChild(productCard);
-      }
+      let image : HTMLElement= createImage(productName);
+      let nameDiv : HTMLElement = createNameDiv(productName);
+      let starsDiv : HTMLElement = createStarDiv(averageReviews);
+      let priceDiv : HTMLElement = createPriceDiv(price);
+      productCard.addEventListener('click', function() {
+        showProduct(productName);
+      });
+      productCard.appendChild(image);
+      productCard.appendChild(nameDiv);
+      productCard.appendChild(starsDiv);
+      productCard.appendChild(priceDiv);
+      productArea.appendChild(productCard);
+    }
 
       /**
    * Displays the user's previous transactions.
    * @param {Order} data - The transaction data.
    * @param {HTMLElement} list - The transaction list element.
    */
-  export function displayPreviousTransactions(data: Order, list: HTMLElement) {
+  export function displayPreviousTransactions(data: Order, list: HTMLElement) : void{
     // Get the transaction content container
-    const transactionContent = id('transaction-content');
+    let transactionContent : HTMLElement = id('transaction-content');
     transactionContent.innerHTML = ''; // Clear existing content
 
     // Create and append heading
-    const heading = createPurchaseHeading();
+    const heading : HTMLElement = createPurchaseHeading();
     transactionContent.appendChild(heading);
 
     // Add transaction list
@@ -114,11 +114,11 @@ export let currentProductId : number | null = null;
       displayNoOrders();
     } else {
       for (let i = 0; i < data.length; i++) {
-        let order = data[i];
-        const orderDiv = createOrderDiv(order);
+        let order : Order = data[i];
+        const orderDiv :HTMLElement = createOrderDiv(order);
 
         // Create order ID div and append it to orderDiv
-        const orderId = gen('div');
+        const orderId : HTMLElement = gen('div');
         orderId.className = 'transaction-id';
         orderId.textContent = `Order ID: ${order.order_id}`;
         orderDiv.appendChild(orderId);
@@ -133,7 +133,7 @@ export let currentProductId : number | null = null;
         list.appendChild(orderDiv);
       }
       // Append the list to transaction content
-      id('transaction-content').appendChild(list);
+      transactionContent.appendChild(list);
     }
   }
 
@@ -142,8 +142,8 @@ export let currentProductId : number | null = null;
    * @param {Order} order - The order data.
    * @returns {HTMLElement} - The created product price div element.
    */
-  export function createProductPrice(order: Order) {
-    const price = gen('div');
+  export function createProductPrice(order: Order) : HTMLElement {
+    const price : HTMLElement = gen('div');
     price.className = 'transaction-price';
     price.textContent = `Price: $${order.price}`;
     return price;
@@ -154,8 +154,8 @@ export let currentProductId : number | null = null;
    * @param {Object} order - The order data.
    * @returns {HTMLElement} - The created product description div element.
    */
-  export function createProductDescription(order : Order) {
-    const description = gen('div');
+  export function createProductDescription(order : Order) : HTMLElement {
+    const description :HTMLElement = gen('div');
     description.className = 'transaction-description';
     description.textContent = `Description: ${order.description}`;
     return description;
@@ -166,8 +166,8 @@ export let currentProductId : number | null = null;
    * @param {Object} order - The order data.
    * @returns {HTMLElement} - The created product name div element.
    */
-  export function createProductName(order : Order) {
-    const productName = gen('div');
+  export function createProductName(order : Order) : HTMLElement {
+    const productName :HTMLElement = gen('div');
     productName.className = 'transaction-name';
     productName.textContent = `Product: ${order.name}`;
     return productName;
@@ -178,8 +178,8 @@ export let currentProductId : number | null = null;
    * @param {Object} order - The order data.
    * @returns {HTMLElement} - The created order div element.
    */
-  export function createOrderDiv(order : Order) {
-    const orderDiv = gen('div');
+  export function createOrderDiv(order : Order) : HTMLElement{
+    const orderDiv :HTMLElement = gen('div');
     orderDiv.className = 'transaction-item';
     orderDiv.setAttribute('data-order-id', order.order_id);
     return orderDiv;
@@ -189,8 +189,8 @@ export let currentProductId : number | null = null;
    * Creates a purchase heading element.
    * @returns {HTMLElement} - The created purchase heading element.
    */
-  export function createPurchaseHeading() {
-    const heading = gen('h3');
+  export function createPurchaseHeading() : HTMLElement{
+    const heading : HTMLElement = gen('h3');
     heading.textContent = 'Purchase History';
     return heading;
   }
@@ -218,7 +218,7 @@ export let currentProductId : number | null = null;
  * @returns {HTMLElement} - The created description div element.
  */
 export function createDescriptionDiv(description : string) : HTMLElement {
-  const descriptionDiv = gen('div');
+  const descriptionDiv : HTMLElement = gen('div');
   descriptionDiv.className = 'product-description';
   descriptionDiv.textContent = description;
   return descriptionDiv;
@@ -230,7 +230,7 @@ export function createDescriptionDiv(description : string) : HTMLElement {
  * @returns {HTMLElement} - The created stock div element.
  */
 export function createStockDiv(stock : string) : HTMLElement {
-  const stockDiv = gen('div');
+  const stockDiv : HTMLElement = gen('div');
   stockDiv.className = 'product-stock';
   stockDiv.textContent = `In stock: ${stock}`;
   return stockDiv;
@@ -241,24 +241,24 @@ export function createStockDiv(stock : string) : HTMLElement {
  * @param {number} price - The product price.
  * @returns {HTMLElement} - The created price div element.
  */
-  export function createPriceDiv(price : number) : HTMLElement {
-    const priceDiv : HTMLElement = gen('div');
-    priceDiv.className = 'price';
-    priceDiv.textContent = `From $${price} USD`;
-    return priceDiv;
-  }
+export function createPriceDiv(price : number) : HTMLElement {
+  const priceDiv : HTMLElement = gen('div');
+  priceDiv.className = 'price';
+  priceDiv.textContent = `From $${price} USD`;
+  return priceDiv;
+}
 
     /**
  * Creates a star rating div element for a product card.
  * @param {number} averageReviews - The average review rating.
  * @returns {HTMLElement} - The created star rating div element.
  */
-export function createStarDiv(averageReviews : number) {
-  const starsDiv = gen('div');
+export function createStarDiv(averageReviews : number) : HTMLElement{
+  const starsDiv : HTMLElement = gen('div');
   starsDiv.className = 'stars';
-  const starCount = Math.floor(averageReviews);
-  const starEmoji = '⭐';
-  const starsText = (averageReviews - starCount >= 0.5) ?
+  const starCount : number = Math.floor(averageReviews);
+  const starEmoji : string = '⭐';
+  const starsText : string = (averageReviews - starCount >= 0.5) ?
       starEmoji.repeat(starCount) + "✨" : starEmoji.repeat(starCount);
   starsDiv.textContent = starsText;
   return starsDiv;
@@ -270,9 +270,9 @@ export function createStarDiv(averageReviews : number) {
    * @returns {HTMLElement} - The created name div element.
    */
 export function createNameDiv(productName : string) : HTMLElement{
-  const nameDiv = gen('div');
+  const nameDiv :HTMLElement = gen('div');
   nameDiv.className = 'product-name';
-  const formattedName = productName
+  const formattedName : string = productName
       .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
@@ -372,8 +372,8 @@ export function appendBasicInfo(container : HTMLElement, data: Product) : void {
    * @param {product} data - The product data.
    */
   export function appendInteractionButtons(container : HTMLElement, data : Product) : void {
-    const buyButton = createBuyButton(data.product_id, data.price);
-    const reviewSection = createReviewSection(String(data.product_id));
+    const buyButton : HTMLElement = createBuyButton(data.product_id);
+    const reviewSection :HTMLElement = createReviewSection(String(data.product_id));
     container.appendChild(buyButton);
     container.appendChild(reviewSection);
   }
@@ -384,7 +384,7 @@ export function appendBasicInfo(container : HTMLElement, data: Product) : void {
    * @param {number} price - The product price.
    * @returns {HTMLElement} - The created buy button element.
    */
-  export function createBuyButton(productId : number, price : number) : HTMLElement {
+  export function createBuyButton(productId : number) : HTMLElement {
     const buyButton : HTMLElement = gen('button');
     buyButton.textContent = 'Buy';
     buyButton.className = 'buy-button';
