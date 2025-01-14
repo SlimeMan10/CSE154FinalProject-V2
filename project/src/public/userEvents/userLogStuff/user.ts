@@ -1,6 +1,6 @@
-import { id } from '../extraFunctions/extra.js';
-import { clearError, showError } from '../extraFunctions/events.js';
-import { showLoggedIn } from './login.js';
+import { id } from '../../extraFunctions/redudant/index.js';
+import { clearError, showError } from '../../extraFunctions/events.js';
+import { showLoggedIn } from '../login/index.js';
 import { checkIfStrong } from './passwordEvents.js';
 
 export let user: string | null = null;

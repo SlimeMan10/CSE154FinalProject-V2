@@ -1,3 +1,4 @@
+//used for the function paymentStuff in index.ts
 export type PaymentFields = {
   cardHolder: string;       // Cardholder name
   cardNumber: string;       // Card number (numeric string, possibly with spaces or dashes)
@@ -6,6 +7,7 @@ export type PaymentFields = {
   billingAddress: string;   // Billing address
 };
 
+//used in getproduct and getAllProducts endpoint
 export type Product = {
   name: string;                  // Product name
   description: string;           // Product description
@@ -18,7 +20,18 @@ export type Product = {
   review_usernames: string;      // Comma-separated usernames of reviewers (still a string)
 };
 
+//purchase endpoint
 export type purchaseFields = {
   message: string,
   confirmationCode: string
 };
+
+// /transactions endpoint
+export type Order = {
+  order_id: string,
+  name: string,
+  description: string,
+  price: number,
+  image: string,
+  product_id: number
+}

@@ -1,6 +1,6 @@
-import { id } from '../extraFunctions/extra.js';
-import { clearError , showError } from '../extraFunctions/events.js';
-import { user } from './user.js';
+import { id } from '../../extraFunctions/redudant/index.js';
+import { clearError , showError } from '../../extraFunctions/events.js';
+import { user } from '../userLogStuff/user.js';
 
 /**
    * Shows the logged-in state and displays the appropriate elements.
