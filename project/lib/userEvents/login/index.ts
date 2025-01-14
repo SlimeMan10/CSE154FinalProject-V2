@@ -1,5 +1,5 @@
-import { id } from '../../extraFunctions/redudant/index.js';
-import { clearError , showError } from '../../extraFunctions/events.js';
+import { id } from '../../../src/extraFunctions/redudant/index.js';
+import { clearError , showError } from '../../../src/extraFunctions/events.js';
 import { login, user } from '../userLogStuff/user.js';
 
 /**

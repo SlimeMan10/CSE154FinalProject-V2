@@ -1,5 +1,5 @@
 import { id, qs, gen } from './extraFunctions/redudant/index.js';
-import { showError, clearError } from './extraFunctions/events.js';
+import { showError, clearError } from '../src/extraFunctions/events.js';
 import { checkIfStrong, verifyPassword } from './userEvents/passwordEvents.js';
 import { Product, PaymentFields, purchaseFields } from './types/index.js';
 import { handleCreateAccountClick, handleLogin } from './userEvents/login/index.js';

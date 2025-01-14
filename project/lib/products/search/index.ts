@@ -1,7 +1,7 @@
 import { id, qs, gen } from '../extraFunctions/extra.js';
 import { showError } from '../extraFunctions/events.js';
 import { Product } from '../types/index.js';
-import { hideTransactions, renderProduct } from '../displays';
+import { hideTransactions, renderProduct } from '../displays/index.js';
 
 /**
    * Displays all products based on the provided search terms.

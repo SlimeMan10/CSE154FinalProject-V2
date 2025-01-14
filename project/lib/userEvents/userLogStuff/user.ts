@@ -1,8 +1,8 @@
-import { id } from '../../extraFunctions/redudant/index.js';
-import { clearError, showError } from '../../extraFunctions/events.js';
+import { id } from '../../../src/extraFunctions/redudant/index.js';
+import { clearError, showError } from '../../../src/extraFunctions/events.js';
 import { showLoggedIn } from '../login/index.js';
 import { checkIfStrong } from './passwordEvents.js';
-import { logIn, newUser } from '../../types/index.js';
+import { logIn, newUser } from '../../../src/types/index.js';
 
 export let user: string | null = null;
 
