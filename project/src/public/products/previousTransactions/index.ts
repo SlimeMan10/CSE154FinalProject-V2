@@ -16,7 +16,7 @@ import { displayPreviousTransactions } from '../displays/index.js';
       const data : Order = await response.json();
       id('product-area').classList.add('hidden');
       id('all-products').classList.add('hidden');
-      const list = gen('div');
+      const list : HTMLElement = gen('div');
       list.classList.add('transaction-list');
       displayPreviousTransactions(data, list);
     } catch (err) {
