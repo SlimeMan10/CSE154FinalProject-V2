@@ -3,14 +3,14 @@ import { user } from '../users/user.js'
 import { showError, displaySuccessMessage } from '../extraFunctions/events.js';
 import { id } from '../extraFunctions/extra.js';
 import { hideTransactions, clearPaymentForm } from './transactionForm.js';
-import { PaymentFields } from '../../types/index.js';
+import { PaymentFields, purchaseFields } from '../../types/index.js';
 
 export let productId: number | null= null;
 /**
    * Handles the submission of a payment.
    * @throws {Error} - Throws an error if the purchase fails.
    */
-export async function handlePaymentSubmission() : Promise<void> {
+export async function handlePaymentSubmission(): Promise<void> {
   try {
     if(productId === null) {
       throw new Error('No product selected');
@@ -30,7 +30,7 @@ export async function handlePaymentSubmission() : Promise<void> {
    * @param {number} price - The product price.
    * @throws {Error} - Throws an error if the purchase fails.
    */
-export async function handlePurchase() : Promise<void> { {
+export async function handlePurchase(): Promise<void> {
   try {
     const form  = new FormData();
     if (user) {
@@ -40,7 +40,7 @@ export async function handlePurchase() : Promise<void> { {
     }
     form.append("product_id", String(productId));
 
-    const response : Response = await fetch("/purchase", {
+    const response: Response = await fetch("/purchase", {
       method: "POST",
       body: form
     });
@@ -49,7 +49,7 @@ export async function handlePurchase() : Promise<void> { {
       throw new Error("Purchase failed");
     }
 
-    const data : Response = await response.json();
+    const data: purchaseFields = await response.json();
 
     displaySuccessMessage(`Purchase successful! Order number: ${data.confirmationCode}`);
 
@@ -67,12 +67,14 @@ export async function handlePurchase() : Promise<void> { {
    * Updates the stock display for a product after a purchase.
    * @param {string} productId - The product ID.
    */
-    export function updateStockDisplay() {
+    export function updateStockDisplay(): void {
       const productContainer = document.querySelector(`.single-product-container[data-product-id="${productId}"]`);
       if (productContainer) {
-        const stockDiv = productContainer.querySelector(".product-stock");
+        const stockDiv: HTMLElement = productContainer.querySelector(".product-stock") as HTMLElement;
         if (stockDiv) {
-          const currentStock = parseInt(stockDiv.textContent.match(/\d+/)[0]);
+          let stockText: string = stockDiv.textContent || '';
+          const match : RegExpMatchArray | null = stockText.match(/\d+/);
+          const currentStock: RegExpMatchArray | number= match ? parseInt(match[0]): 0;
           if (currentStock > 0) {
             stockDiv.textContent = `In stock: ${currentStock - 1}`;
           }
@@ -90,7 +92,7 @@ export async function handlePurchase() : Promise<void> { {
    * @param {string} fields.billingAddress - The billing address.
    * @returns {boolean} - Returns true if all fields are valid, false otherwise.
    */
-  export function validatePaymentFields(fields : PaymentFields) : boolean{
+  export function validatePaymentFields(fields: PaymentFields): boolean {
     const { cardHolder, cardNumber, cardExpiry, cardCVV, billingAddress } = fields;
 
     if (!cardHolder || !cardNumber || !cardExpiry || !cardCVV || !billingAddress) {
@@ -121,8 +123,8 @@ export async function handlePurchase() : Promise<void> { {
    * @param {string} cardNumber - The card number to validate.
    * @returns {boolean} - Returns true if the card number is valid, false otherwise.
    */
-    export function validateCardNumber(cardNumber : string) : boolean {
-      const cleanNumber : string = cardNumber.replace(/\D/g, '');
+    export function validateCardNumber(cardNumber: string): boolean {
+      const cleanNumber: string = cardNumber.replace(/\D/g, '');
       if (cleanNumber.length !== 16) {
         return false;
       }
@@ -134,7 +136,7 @@ export async function handlePurchase() : Promise<void> { {
      * @param {string} expiry - The expiry date to check.
      * @returns {boolean} - Returns true if the expiry date is in the correct format, false otherwise.
      */
-    export function checkExpiryFormat(expiry : string) : boolean{
+    export function checkExpiryFormat(expiry: string): boolean {
       return /^\d{2}\/\d{2}$/.test(expiry);
     }
 
@@ -143,11 +145,11 @@ export async function handlePurchase() : Promise<void> { {
      * @param {string} expiry - The expiry date to validate (in the format MM/YY).
      * @returns {boolean} - Returns true if the expiry date is valid, false otherwise.
      */
-    export function validateCardExpiry(expiry : string) : boolean {
+    export function validateCardExpiry(expiry: string): boolean {
       if (!checkExpiryFormat(expiry)) {
         return false;
       }
-      const [month, year] : string[] = expiry.split('/');
+      const [month, year]: string[] = expiry.split('/');
       return checkExpiryDate(parseInt(month), parseInt(year));
     }
 
@@ -156,7 +158,7 @@ export async function handlePurchase() : Promise<void> { {
      * @param {string} cvv - The CVV to validate.
      * @returns {boolean} - Returns true if the CVV is valid, false otherwise.
      */
-    export function validateCVV(cvv : string) : boolean {
+    export function validateCVV(cvv: string): boolean {
       return /^\d{3}$/.test(cvv);
     }
 
@@ -164,9 +166,9 @@ export async function handlePurchase() : Promise<void> { {
      * Handles input events for the card number field.
      * @param {Event} event - The input event.
      */
-   export function handleCardNumberInput(event : Event) : void {
-      const eventTarget : HTMLInputElement = event.target as HTMLInputElement;
-      const value = eventTarget.value.replace(/\D/g, '');
+   export function handleCardNumberInput(event: Event): void {
+      const eventTarget: HTMLInputElement = event.target as HTMLInputElement;
+      const value: string = eventTarget.value.replace(/\D/g, '');
       eventTarget.value = value.slice(0, 16);
     }
 
@@ -177,18 +179,18 @@ export async function handlePurchase() : Promise<void> { {
      * @param {number} year - The expiry year (four-digit year).
      * @returns {boolean} - Returns true if the expiry date is valid, false otherwise.
      */
-    export function checkExpiryDate(expiryMonth : number, year : number) : boolean {
-      const currentDate : Date = new Date();
-      const currentFullYear : number = currentDate.getFullYear();
-      const currentMonth : number = currentDate.getMonth() + 1;
+    export function checkExpiryDate(expiryMonth: number, year: number): boolean {
+      const currentDate: Date = new Date();
+      const currentFullYear: number = currentDate.getFullYear();
+      const currentMonth: number = currentDate.getMonth() + 1;
 
       // Convert to numbers and add 2000 to get full year
-      const expiryYear : number = 2000 + year;
+      const expiryYear: number = 2000 + year;
       // Basic validation
       if (expiryMonth < 1 || expiryMonth > 12) {
         return false;
       }
-      const maxExpiry : number = 5;
+      const maxExpiry: number = 5;
       // Check if card is expired
       if (expiryYear < currentFullYear - maxExpiry) {
         return false;
@@ -207,12 +209,12 @@ export async function handlePurchase() : Promise<void> { {
      * Handles input events for the expiry date field.
      * @param {Event} event - The input event.
      */
-    export function handleExpiryInput(event : Event) : void {
-      let eventTarget : HTMLInputElement = event.target as HTMLInputElement;
-      let value : string = eventTarget.value.replace(/\D/g, '');
+    export function handleExpiryInput(event: Event): void {
+      let eventTarget: HTMLInputElement = event.target as HTMLInputElement;
+      let value: string = eventTarget.value.replace(/\D/g, '');
       if (value.length >= 2) {
-        let month : string = value.slice(0, 2);
-        const monthNum : number = parseInt(month);
+        let month: string = value.slice(0, 2);
+        const monthNum: number = parseInt(month);
         if (monthNum > 12) {
           month = '12';
         } else if (monthNum < 1) {
@@ -220,7 +222,7 @@ export async function handlePurchase() : Promise<void> { {
         } else if (monthNum < 10 && month.length === 2) {
           month = '0' + monthNum;
         }
-        value = month + (value.length > 2 ? '/' + value.slice(2, 4) : '');
+        value = month + (value.length > 2 ? '/' + value.slice(2, 4): '');
       }
       eventTarget.value = value.slice(0, 5);
     }
@@ -229,16 +231,16 @@ export async function handlePurchase() : Promise<void> { {
      * Handles input events for the CVV field.
      * @param {Event} event - The input event.
      */
-    export function handleCVVInput(event: Event) : void {
-      let eventTarget : HTMLInputElement = event.target as HTMLInputElement;
-      const value = eventTarget.value.replace(/\D/g, '');
+    export function handleCVVInput(event: Event): void {
+      let eventTarget: HTMLInputElement = event.target as HTMLInputElement;
+      const value: string = eventTarget.value.replace(/\D/g, '');
       eventTarget.value = value.slice(0, 3);
     }
 
     /**
    * Sets up event listeners for payment input fields.
    */
-  export function setupPaymentInputListeners() : void {
+  export function setupPaymentInputListeners(): void {
     id('card-number').addEventListener('input', handleCardNumberInput);
     id('card-expiry').addEventListener('input', handleExpiryInput);
     id('card-cvv').addEventListener('input', handleCVVInput);
@@ -247,15 +249,15 @@ export async function handlePurchase() : Promise<void> { {
   /**
    * Sets up event listeners and functionality for payment-related elements.
    */
-  export async function paymentStuff() : Promise<void>{
+  export async function paymentStuff(): Promise<void> {
     setupPaymentInputListeners();
     id('submit-payment-btn').addEventListener('click', async function() {
-      const cardHolder : string = (id('card-holder') as HTMLInputElement).value;
-      const cardNumber : string = (id('card-number') as HTMLInputElement).value;
-      const cardExpiry : string = (id('card-expiry') as HTMLInputElement).value;
-      const cardCVV : string = (id('card-cvv') as HTMLInputElement).value;
-      const billingAddress : string = (id('billing-address') as HTMLInputElement).value;
-      const fields : PaymentFields = {
+      const cardHolder: string = (id('card-holder') as HTMLInputElement).value;
+      const cardNumber: string = (id('card-number') as HTMLInputElement).value;
+      const cardExpiry: string = (id('card-expiry') as HTMLInputElement).value;
+      const cardCVV: string = (id('card-cvv') as HTMLInputElement).value;
+      const billingAddress: string = (id('billing-address') as HTMLInputElement).value;
+      const fields: PaymentFields = {
         cardHolder: cardHolder.trim(),
         cardNumber: cardNumber.trim(),
         cardExpiry: cardExpiry.trim(),

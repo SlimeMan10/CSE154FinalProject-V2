@@ -36,7 +36,7 @@ import { id, gen } from './extra.js';
       if (oldMessage) {
         oldMessage.remove();
       }
-      const successDiv :HTMLElement = gen('div');
+      const successDiv : HTMLElement = gen('div');
       successDiv.id = 'global-success-message';
       successDiv.className = 'success-message';
       successDiv.textContent = message;
