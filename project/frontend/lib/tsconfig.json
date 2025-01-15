@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",                     // Modern JavaScript version
+    "lib": ["dom", "dom.iterable", "esnext"], // Include browser and modern JavaScript features
+    "module": "esnext",                    // Use ES modules
+    "moduleResolution": "node",            // Resolve modules in Node.js style
+    "jsx": "preserve",                     // Preserve JSX syntax for Next.js
+    "strict": true,                        // Enable strict type-checking
+    "esModuleInterop": true,               // Ensure compatibility with CommonJS modules
+    "resolveJsonModule": true,             // Allow importing JSON files
+    "isolatedModules": true,               // Required for Next.js
+    "noEmit": true,                        // Prevent emitting output (Next.js handles builds)
+    "incremental": true,
+    "typeRoots": ["node_modules/@types"],  // Look for types in @types packages
+    "paths": {
+      "@/*": ["./*"]                       // Aliases for imports
+    }
+  },
+  "include": [
+    "next-env.d.ts",                       // Required for Next.js environment
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"                  // Include Next.js auto-generated types
+  ],
+  "exclude": [
+    "node_modules",
+    "./dist"                               // Exclude the output directory
+  ]
+}

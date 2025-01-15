@@ -1,0 +1,28 @@
+{
+  "name": "fp-partner-hgram007-jherna3",
+  "version": "1.0.0",
+  "description": "Full stack project using Next.js with SQLite and Express.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
+    "next": "^13.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "eslint": "^9.16.0",
+    "stylelint": "^16.11.0",
+    "stylelint-config-standard": "^36.0.1"
+  }
+}
